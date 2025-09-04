@@ -20,18 +20,16 @@
 // }
 
 interface GredichResult {
-  serpEntries: {
-    url: string
-    title: string
-    domain: string
-    position: number
-    type: string
-    clicks: number
-    domainAuthority: number
-    facebookShares: string
-    pinterestShares: string
-    redditShares: string
-  }[]
+  url: string
+  title: string
+  domain: string
+  position: number
+  type: string
+  clicks: number
+  domainAuthority: number
+  facebookShares: string
+  pinterestShares: string
+  redditShares: string
 }
 
 const gredich: ScraperSettings = {
@@ -48,14 +46,24 @@ const gredich: ScraperSettings = {
     return `https://n8n.gredich.com/webhook/f75eb3d3-4cec-4f95-be76-ef219a40fa0d?keyword=${keyword.keyword}&country=${country}&device=${keyword.device}&lang=${lang}`
     // return `https://api.scrapingrobot.com/?token=${settings.scaping_api}&proxyCountry=${country}&render=false${device}&url=${url}`
   },
-  resultObjectKey: 'result',
+  resultObjectKey: 'serpEntries',
   serpExtractor: (content) => {
-    const extractedResult = []
-    const result: GredichResult =
-      typeof content === 'string' ? JSON.parse(content) : (content as GredichResult)
-    const { serpEntries } = result
+    console.log('Content:', content)
+    const extractedResult: {
+      url: string
+      title: string
+      position: number
+    }[] = []
+    console.log('Extracted results:', extractedResult)
+    const result: GredichResult[] =
+      typeof content === 'string'
+        ? JSON.parse(content)
+        : (content as GredichResult[])
+    console.log('Result:', result)
+    // const { serpEntries } = result
+    // console.log('Serp Entries:', serpEntries)
 
-    for (const { url, title, position } of serpEntries) {
+    for (const { url, title, position } of result) {
       if (title && url) {
         extractedResult.push({
           title,

@@ -19,6 +19,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }} # Make sure to add the secrets in your repository in -> Settings -> Secrets (Actions) -> New repository secret
           password: ${{ secrets.DOCKERHUB_TOKEN }} # Make sure to add the secrets in your repository in -> Settings -> Secrets (Actions) -> New repository secret
 
+      - name: Create environment file
+        run: |
+          echo "NODE_ENV=production" >> .env
+          echo "DB_HOST=${{ env.USER }}" >> .env
+          echo "DB_PORT=${{ env.PASSWORD }}" >> .env
+          echo "DB_USER=${{ env.SECRET }}" >> .env
+          echo "DB_PASS=${{ env.APIKEY }}" >> .env
+          echo "API_KEY=${{ env.SESSION_DURATION }}" >> .env
+          echo "API_KEY=${{ env.NEXT_PUBLIC_APP_URL }}" >> .env
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
